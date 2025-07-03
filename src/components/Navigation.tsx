@@ -3,18 +3,28 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { isLoggedIn } = useAuth();
 
-  const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'Request Delivery', href: '/request-delivery' },
-    { name: 'Agent Dashboard', href: '/agent-dashboard' },
-    { name: 'Contact / Help', href: '/contact' },
-  ];
+  const getNavigation = () => {
+    const baseNavigation = [
+      { name: 'Home', href: '/' },
+      { name: 'Request Delivery', href: '/request-delivery' },
+      { name: 'Contact / Help', href: '/contact' },
+    ];
 
+    if (isLoggedIn) {
+      baseNavigation.splice(2, 0, { name: 'Agent Dashboard', href: '/agent-dashboard' });
+    }
+
+    return baseNavigation;
+  };
+
+  const navigation = getNavigation();
   const isActive = (path: string) => location.pathname === path;
 
   return (

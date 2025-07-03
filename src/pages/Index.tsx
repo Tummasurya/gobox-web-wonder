@@ -1,11 +1,30 @@
-
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Package, Zap, Shield, Clock, MapPin, Phone, Mail } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Index = () => {
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+
+  const handleRequestDelivery = () => {
+    if (isLoggedIn) {
+      navigate('/request-delivery');
+    } else {
+      navigate('/login');
+    }
+  };
+
+  const handleGetStarted = () => {
+    if (isLoggedIn) {
+      navigate('/request-delivery');
+    } else {
+      navigate('/signup');
+    }
+  };
+
   const features = [
     {
       icon: Package,
@@ -41,12 +60,18 @@ const Index = () => {
             The easiest way to get your school boxes delivered safely
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
-            <Button asChild size="lg" className="bg-white text-primary hover:bg-gray-100 rounded-full px-8 py-3 text-lg font-semibold w-full sm:w-auto">
-              <Link to="/request-delivery">Request Delivery</Link>
+            <Button 
+              onClick={handleRequestDelivery}
+              size="lg" 
+              className="bg-white text-primary hover:bg-gray-100 rounded-full px-8 py-3 text-lg font-semibold w-full sm:w-auto"
+            >
+              Request Delivery
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary rounded-full px-8 py-3 text-lg font-semibold w-full sm:w-auto">
-              <Link to="/agent-dashboard">Agent Dashboard</Link>
-            </Button>
+            {isLoggedIn && (
+              <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary rounded-full px-8 py-3 text-lg font-semibold w-full sm:w-auto">
+                <Link to="/agent-dashboard">Agent Dashboard</Link>
+              </Button>
+            )}
           </div>
         </div>
       </section>
@@ -88,8 +113,12 @@ const Index = () => {
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Join thousands of happy students and parents using GoBox for safe school deliveries!
           </p>
-          <Button asChild size="lg" className="gobox-gradient text-white rounded-full px-8 py-3 text-lg font-semibold">
-            <Link to="/signup">Get Started Today</Link>
+          <Button 
+            onClick={handleGetStarted}
+            size="lg" 
+            className="gobox-gradient text-white rounded-full px-8 py-3 text-lg font-semibold"
+          >
+            Get Started Today
           </Button>
         </div>
       </section>
