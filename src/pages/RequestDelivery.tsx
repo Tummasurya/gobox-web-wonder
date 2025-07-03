@@ -1,4 +1,3 @@
-
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { CalendarIcon, Package, Clock, User, Phone, MapPin, School, CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -35,6 +35,7 @@ type FormData = z.infer<typeof formSchema>;
 const RequestDelivery = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [submittedData, setSubmittedData] = useState<FormData | null>(null);
+  const navigate = useNavigate();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -53,6 +54,15 @@ const RequestDelivery = () => {
     console.log('Form submitted:', data);
     setSubmittedData(data);
     setShowConfirmation(true);
+  };
+
+  const handleConfirmationClose = () => {
+    setShowConfirmation(false);
+    if (submittedData) {
+      navigate('/delivery-pricing', { 
+        state: { deliveryData: submittedData }
+      });
+    }
     form.reset();
   };
 
@@ -382,15 +392,15 @@ const RequestDelivery = () => {
               Request Submitted!
             </DialogTitle>
             <DialogDescription className="text-gray-600 text-lg">
-              Thank you! Your delivery request has been placed. You'll receive a confirmation shortly.
+              Thank you! Your delivery request has been placed. Redirecting to pricing details...
             </DialogDescription>
           </DialogHeader>
           <div className="mt-6 text-center">
             <Button 
-              onClick={() => setShowConfirmation(false)}
+              onClick={handleConfirmationClose}
               className="gobox-gradient text-white rounded-full px-8 py-2"
             >
-              Got it!
+              Continue to Pricing
             </Button>
           </div>
         </DialogContent>
