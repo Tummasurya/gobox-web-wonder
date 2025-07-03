@@ -2,7 +2,7 @@
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Package, Zap, Shield, Clock } from 'lucide-react';
+import { Package, Zap, Shield, Clock, MapPin, Phone, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Index = () => {
@@ -93,6 +93,68 @@ const Index = () => {
           </Button>
         </div>
       </section>
+
+      {/* Footer Section with Office Address and Contact Details */}
+      <footer className="bg-gray-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Company Info */}
+            <div className="text-center md:text-left">
+              <div className="flex items-center justify-center md:justify-start space-x-2 mb-4">
+                <div className="gobox-gradient p-2 rounded-xl">
+                  <Package className="h-6 w-6 text-white" />
+                </div>
+                <span className="text-2xl font-bold">GoBox</span>
+              </div>
+              <p className="text-gray-300 mb-4">
+                Making school deliveries safe, fast, and fun for everyone!
+              </p>
+            </div>
+
+            {/* Office Address */}
+            <div className="text-center md:text-left">
+              <h3 className="text-lg font-semibold mb-4 flex items-center justify-center md:justify-start">
+                <MapPin className="h-5 w-5 mr-2" />
+                Office Address
+              </h3>
+              <div className="text-gray-300 space-y-1">
+                <p>123 School Street</p>
+                <p>Education District</p>
+                <p>Learning City, LC 12345</p>
+                <p>United States</p>
+              </div>
+            </div>
+
+            {/* Contact Details */}
+            <div className="text-center md:text-left">
+              <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-center md:justify-start">
+                  <Phone className="h-5 w-5 mr-3 text-green-400" />
+                  <span className="text-gray-300">(555) 123-GOBOX</span>
+                </div>
+                <div className="flex items-center justify-center md:justify-start">
+                  <Mail className="h-5 w-5 mr-3 text-blue-400" />
+                  <span className="text-gray-300">hello@gobox.com</span>
+                </div>
+                <div className="text-gray-300 text-sm mt-4">
+                  <p>Business Hours:</p>
+                  <p>Monday - Friday: 8:00 AM - 6:00 PM</p>
+                  <p>Saturday: 9:00 AM - 4:00 PM</p>
+                  <p>Sunday: Closed</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Border */}
+          <div className="border-t border-gray-700 mt-12 pt-8 text-center">
+            <p className="text-gray-400">
+              © 2024 GoBox. All rights reserved. Making school deliveries awesome! 📦✨
+            </p>
+          </div>
+        </div>
+      </footer>
     </PageLayout>
   );
 };
