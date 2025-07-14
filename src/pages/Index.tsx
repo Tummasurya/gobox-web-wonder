@@ -6,11 +6,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
 const Index = () => {
-  const { isLoggedIn } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const handleRequestDelivery = () => {
-    if (isLoggedIn) {
+    if (user) {
       navigate('/request-delivery');
     } else {
       navigate('/login');
@@ -18,7 +18,7 @@ const Index = () => {
   };
 
   const handleGetStarted = () => {
-    if (isLoggedIn) {
+    if (user) {
       navigate('/request-delivery');
     } else {
       navigate('/signup');
@@ -67,7 +67,7 @@ const Index = () => {
             >
               Request Delivery
             </Button>
-            {isLoggedIn && (
+            {user && (
               <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary rounded-full px-8 py-3 text-lg font-semibold w-full sm:w-auto">
                 <Link to="/agent-dashboard">Agent Dashboard</Link>
               </Button>

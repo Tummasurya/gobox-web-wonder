@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
@@ -12,9 +12,15 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { signIn, user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (user) {
+      navigate('/request-delivery');
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,25 +36,23 @@ const Login = () => {
 
     setIsLoading(true);
     
-    // Simulate login process
-    setTimeout(() => {
-      // Simple validation for demo (in real app, this would be API call)
-      if (email.includes('@') && password.length >= 6) {
-        login();
-        toast({
-          title: "Welcome back!",
-          description: "Login successful. Redirecting to Request Delivery...",
-        });
-        navigate('/request-delivery');
-      } else {
-        toast({
-          title: "Login Failed",
-          description: "Incorrect email or password. Please try again.",
-          variant: "destructive",
-        });
-      }
-      setIsLoading(false);
-    }, 1500);
+    const { error } = await signIn(email, password);
+    
+    if (error) {
+      toast({
+        title: "Login Failed",
+        description: error.message || "Incorrect email or password. Please try again.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Welcome back!",
+        description: "Login successful. Redirecting to Request Delivery...",
+      });
+      navigate('/request-delivery');
+    }
+    
+    setIsLoading(false);
   };
 
   return (

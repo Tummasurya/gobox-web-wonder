@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const { isLoggedIn } = useAuth();
+  const { user } = useAuth();
 
   const getNavigation = () => {
     const baseNavigation = [
@@ -17,7 +17,7 @@ const Navigation = () => {
       { name: 'Contact / Help', href: '/contact' },
     ];
 
-    if (isLoggedIn) {
+    if (user) {
       baseNavigation.splice(2, 0, { name: 'Agent Dashboard', href: '/agent-dashboard' });
     }
 
