@@ -14,7 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      delivery_requests: {
+        Row: {
+          box_type: string
+          full_name: string
+          id: string
+          notes: string | null
+          phone: string
+          pickup_address: string
+          pickup_date: string
+          pickup_time: string
+          school_name: string
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          box_type: string
+          full_name: string
+          id?: string
+          notes?: string | null
+          phone: string
+          pickup_address: string
+          pickup_date: string
+          pickup_time: string
+          school_name: string
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          box_type?: string
+          full_name?: string
+          id?: string
+          notes?: string | null
+          phone?: string
+          pickup_address?: string
+          pickup_date?: string
+          pickup_time?: string
+          school_name?: string
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

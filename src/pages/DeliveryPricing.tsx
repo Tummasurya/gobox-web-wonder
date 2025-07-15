@@ -7,6 +7,9 @@ import { Badge } from '@/components/ui/badge';
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ArrowRight, Clock, MapPin, Package, User, Star, CheckCircle, Truck } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 
 const DeliveryPricing = () => {
   const navigate = useNavigate();
@@ -14,6 +17,9 @@ const DeliveryPricing = () => {
   const deliveryData = location.state?.deliveryData;
   const [currentStep, setCurrentStep] = useState(1);
   const [estimatedTime, setEstimatedTime] = useState(45);
+  const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuth();
+  const { toast } = useToast();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -55,6 +61,56 @@ const DeliveryPricing = () => {
   ];
 
   const selectedPricing = pricingTiers.find(tier => tier.type === deliveryData?.boxType) || pricingTiers[0];
+
+  const handleConfirmOrder = async () => {
+    if (!user || !deliveryData) {
+      toast({
+        title: "Error",
+        description: "Missing user information or delivery data.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      const { error } = await supabase
+        .from('delivery_requests')
+        .insert({
+          user_id: user.id,
+          full_name: deliveryData.fullName,
+          phone: deliveryData.phone,
+          pickup_address: deliveryData.pickupAddress,
+          pickup_date: deliveryData.pickupDate,
+          pickup_time: deliveryData.pickupTime,
+          school_name: deliveryData.schoolName,
+          box_type: deliveryData.boxType,
+          notes: deliveryData.notes || null,
+          status: 'Confirmed'
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Order Confirmed!",
+        description: "Your delivery request has been successfully submitted.",
+      });
+
+      navigate('/delivery-tracking');
+    } catch (error) {
+      console.error('Error saving delivery request:', error);
+      toast({
+        title: "Error",
+        description: "Failed to confirm order. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <PageLayout>
@@ -197,8 +253,27 @@ const DeliveryPricing = () => {
                   )}
 
                   <Button 
+                    onClick={handleConfirmOrder}
+                    disabled={isLoading}
+                    className="w-full gobox-gradient text-white rounded-xl mb-4"
+                  >
+                    {isLoading ? (
+                      <div className="flex items-center space-x-2">
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        <span>Confirming Order...</span>
+                      </div>
+                    ) : (
+                      <>
+                        Confirm Order
+                        <CheckCircle className="w-4 h-4 ml-2" />
+                      </>
+                    )}
+                  </Button>
+                  
+                  <Button 
                     onClick={() => navigate('/delivery-tracking')}
-                    className="w-full gobox-gradient text-white rounded-xl"
+                    variant="outline"
+                    className="w-full rounded-xl"
                   >
                     View Full Tracking
                     <ArrowRight className="w-4 h-4 ml-2" />
